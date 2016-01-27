@@ -1,0 +1,3 @@
+[console_scripts]
+json = json_diff_patch.__main__:main
+

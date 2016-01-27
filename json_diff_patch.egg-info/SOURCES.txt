@@ -1,0 +1,16 @@
+setup.cfg
+setup.py
+json_diff_patch.egg-info/PKG-INFO
+json_diff_patch.egg-info/SOURCES.txt
+json_diff_patch.egg-info/dependency_links.txt
+json_diff_patch.egg-info/entry_points.txt
+json_diff_patch.egg-info/requires.txt
+json_diff_patch.egg-info/top_level.txt
+lib/__init__.py
+lib/__main__.py
+lib/diff.py
+lib/loader.py
+lib/patch.py
+lib/path.py
+lib/print_style.py
+lib/printer.py
