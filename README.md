@@ -5,10 +5,12 @@ Manipulate JSON documents using ["JSON patch" format][1].
 
 This software is available under the [MIT License](http://opensource.org/licenses/MIT)
 
+This software gains inspration from [json_tools](https://bitbucket.org/vadim_semenov/json_tools) and [benjamin/jsondiffpatch](https://github.com/benjamine/jsondiffpatch)
+
 Installation
 ------------
 
-TBD
+	$ pip install git+https://github.com/apack1001/json-diff-patch.git
 
 Release notes
 -------------
@@ -23,14 +25,14 @@ Just run `nosetests` from the repo root.
 Usage
 -----
 
-There are two ways of using *json_tools*:
+There are two ways of using *json_diff_patch*:
 
  1. As a CLI utilty.
  2. As a Python module.
 
 ### CLI interface
 
-After you've installed *json_tools* you can access it via `json` command in the
+After you've installed *json_diff_patch* you can access it via `json` command in the
 shell. It provides a pretty simple yet powerful interface to manipulate JSON
 documents:
 
@@ -97,7 +99,7 @@ TBD
 Planned features
 ----------------
 
- 1. Support more JSON patch options: currently *json_tools* only supports
+ 1. Support more JSON patch options: currently *json_diff_patch* only supports
     *add*, *remove* and *replace*.
  1. Make **diff** output more human readable (not JSONish).
  1. Improve documentation.
