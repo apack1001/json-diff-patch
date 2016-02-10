@@ -22,11 +22,13 @@ from .loader import load
 def objectHaveCommonKeys(value1, value2):
     if (value1 == value2):
         return True
-
     # fix issue #27. AttributeError: 'NoneType' object has no attribute 'has_key'
     if value1 != None and value2 == None:
         return False
     if value1 == None and value2 != None:
+        return False
+    # issue 28. AttributeError: 'unicode' object has no attribute 'keys'
+    if type(value1) != dict or type(value2) != dict:
         return False
 
     cntCommonKeys = 0
