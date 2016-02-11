@@ -10,6 +10,12 @@ from .loader import load
 #!/usr/bin/env python
 # coding: utf-8
 
+def arrayPremitiveHaveSameType(value1, value2):
+    if isinstance(value1, dict) or isinstance(value2, dict):
+        return False
+    if isinstance(value1, list) or isinstance(value2, list):
+        return False
+    return True
 
 ##
 # @brief When all the keys of this object are the same it take effect.
@@ -28,20 +34,20 @@ def objectHaveCommonKeys(value1, value2):
     if value1 == None and value2 != None:
         return False
     # issue 28. AttributeError: 'unicode' object has no attribute 'keys'
-    if type(value1) != dict or type(value2) != dict:
+    if type(value1) == dict and type(value2) == dict:
+        cntCommonKeys = 0
+        for key in value1.keys():
+            if value2.has_key(key):
+                cntCommonKeys = cntCommonKeys + 1
+
+        #TODO
+        if (len(value1.keys()) == cntCommonKeys or len(value2.keys()) == cntCommonKeys):
+            return True
+
+        if (float(cntCommonKeys) / float(len(value1.keys())) >= 0.8):
+            return True
+    else:
         return False
-
-    cntCommonKeys = 0
-    for key in value1.keys():
-        if value2.has_key(key):
-            cntCommonKeys = cntCommonKeys + 1
-
-    #TODO
-    if (len(value1.keys()) == cntCommonKeys or len(value2.keys()) == cntCommonKeys):
-        return True
-
-    if (float(cntCommonKeys) / float(len(value1.keys())) >= 0.8):
-        return True
     return False
 
 
@@ -100,12 +106,12 @@ class BenjaminJsonDiff:
     # @param path the path of original array
     #
     def tryObjectInnerDiff(self, array1, array2, index1, index2, path):
-        if isinstance(array1[index1], dict) == False or \
-            isinstance(array2[index2], dict) == False:
-            return
         delim = '/' if path != '/' else ''
-        self.__object_diff__(array1[index1], array2[index2], delim.join([path, str(index1)]))
-
+        # if isinstance(array1[index1], dict) == False or \
+        #    isinstance(array2[index2], dict) == False:
+        #    return
+        # self.__object_diff__(array1[index1], array2[index2], delim.join([path, str(index1)]))
+        self.__internal_diff__(array1[index1], array2[index2], delim.join([path, str(index1)]))
     ##
     # @brief Try diff two arrays at given path, using optimized LCS algorithm
     #
@@ -119,7 +125,8 @@ class BenjaminJsonDiff:
             return haveCompositeSimilarSubkeys(array1[index1], array2[index2])
 
         def arrayObjectHaveCommonKeysByIndex(array1, array2, index1, index2):
-            return objectHaveCommonKeys(array1[index1], array2[index2])
+            ret = objectHaveCommonKeys(array1[index1], array2[index2])
+            return ret
 
         def arrayIndexOf(array, target):
             for index, item in enumerate(array):
@@ -273,6 +280,12 @@ class BenjaminJsonDiff:
                         if arrayObjectHaveCommonKeysByIndex(array1, array2, removedItems[indexOfRemoved], index):
                             # issue #2 added (with a removement and an add, optimize as an object replacement)
                             # try to match with a removed item and register as position move
+                            self.tryObjectInnerDiff(array1, array2, removedItems[indexOfRemoved], index, path)
+                            del removedItems[indexOfRemoved]
+                            isMove = True
+                            break;
+                            # issue #28. fix issue of [1,2,3] diff [1,4,3] return one `add` and one `remove`
+                        elif arrayPremitiveHaveSameType(array1[indexOfRemoved], array2[index]):
                             self.tryObjectInnerDiff(array1, array2, removedItems[indexOfRemoved], index, path)
                             del removedItems[indexOfRemoved]
                             isMove = True
